@@ -3,10 +3,19 @@
 # %% auto 0
 __all__ = ['Color', 'rgb2hex']
 
-# %% ../nbs/00_color.ipynb 3
+# %% ../nbs/00_color.ipynb 4
 import enum
 
+class _ClassPropertyDescriptor:
+    def __init__(self, fget):
+        self.fget = fget
 
+    def __get__(self, obj, klass=None):
+        if klass is None:
+            klass = type(obj)
+        return self.fget.__get__(obj, klass)()
+
+    
 class _EnumMeta(enum.Enum):
     '''
     Add some custom members for `enum.Enum`
@@ -21,8 +30,8 @@ class _EnumMeta(enum.Enum):
     def str(self):
         return self.name.lower()
     
+    @_ClassPropertyDescriptor
     @classmethod
-    @property
     def available(cls):
         return tuple(cls.__members__.keys())
 
@@ -197,7 +206,7 @@ class Color(_EnumMeta):
     def __contains__(cls, other):
         return other in cls.available
 
-# %% ../nbs/00_color.ipynb 10
+# %% ../nbs/00_color.ipynb 11
 # def rgb2hex(*rgb) -> str:
 #     return '#{0:x}{1:x}{2:x}'.format(*rgb)
 

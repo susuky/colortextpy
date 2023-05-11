@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['Fore', 'Back', 'Style']
 
-# %% ../nbs/01_ansicolor.ipynb 3
+# %% ../nbs/01_ansicolor.ipynb 4
 from .color import enum, _EnumMeta, Color
 
 
