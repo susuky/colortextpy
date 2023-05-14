@@ -6,17 +6,20 @@ __all__ = ['Printer', 'colorprint']
 # %% ../nbs/03_printer.ipynb 4
 import sys
 
-from . import colorizer, Fore
+from . import colorize, Fore
 
 
-def colorprint(*value, color='black', bold=False, sep=' ', end='\n', file=sys.stdout, flush=False):
+def colorprint(*value, color=None, background=None, bold=False, sep=' ', end='\n', file=sys.stdout, flush=False):
     '''
     Prints the values to a stream, or to sys.stdout by default with `Fore.color` color.
 
     Parameters
     ----------
     color : str, Fore,
-        For example: 'red', Fore.red
+        Text color. Acceptable format: 'red', Fore.red, '#ff0000', (255, 0, 0)
+    
+    background : str, Fore,
+        background color. Acceptable format: 'red', Back.red, '#ff0000', (255, 0, 0)    
     
     bold : bool
         Whether to use bold font
@@ -35,9 +38,13 @@ def colorprint(*value, color='black', bold=False, sep=' ', end='\n', file=sys.st
     '''
     
     text = sep.join(f'{f}' for f in value)
-    print(colorizer(text, fore=color, styles='bold' if bold else ''), sep=sep, end=end, file=file, flush=flush)
-    
-    
+    print(
+        colorize(text, fore=color, back=background, style='bold' if bold else ''), 
+        sep=sep, 
+        end=end, 
+        file=file, 
+        flush=flush
+    )
 
 class _Printer:
     def __init__(self):
@@ -75,7 +82,7 @@ class _Printer:
         '''        
         func_body = (
         "    text = sep.join(f'{f}' for f in value)\n"
-        f"    print(colorizer(text, fore='{color}', styles='bold' if bold else ''), sep=sep, end=end, file=file, flush=flush)"
+        f"    print(colorize(text, fore='{color}', style='bold' if bold else ''), sep=sep, end=end, file=file, flush=flush)"
         )
         exec('def {0}({1}):\n    """{2}"""\n{3}'.format(name, args, document, func_body))
         setattr(self, name, locals()[name])

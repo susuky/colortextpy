@@ -1,5 +1,5 @@
 __version__ = "0.0.2"
 
 from .color import Color
-from .colorize import Fore, Back, Style, ColorizedStream, colorizer
+from .colorizer import Fore, Back, Style, ColorStream, colorize
 from .printer import Printer, colorprint

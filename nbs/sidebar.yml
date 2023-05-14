@@ -4,5 +4,5 @@ website:
       - index.ipynb
       - 00_color.ipynb
       - 01_ansicolor.ipynb
-      - 02_colorize.ipynb
+      - 02_colorizer.ipynb
       - 03_printer.ipynb
