@@ -14,8 +14,39 @@ pip install colortextpy
 
 ## Usage
 
+### Printer
+
 ``` python
-Color.red.name, Color.red.hex, Color.red.rgb
+from colortextpy import Printer, colorprint
+
+Printer.red_print('red')
+Printer.red_print('red', bold=True)
+
+colorprint('violet', color='#aa00ff')
+colorprint('bold violet', color='#aa00ff', bold=True)
+colorprint('bold violet', color='violet', background=(224, 224, 224), bold=True)
 ```
 
-    ('red', '#ff0000', (255, 0, 0))
+![](images/2.png)
+
+### Color
+
+Some Constant of color with **hex**, **rgb**, **bgr** format
+
+``` python
+Color.red.name, Color.red.hex, Color.red.rgb, Color['red']
+```
+
+    ('red', '#ff0000', (255, 0, 0), <Color.red>)
+
+`Color.available` :
+
+![0.png](images/0.png)
+
+You can also use it with `matplotlib.pyplot`:
+
+``` python
+plt.plot(np.sin(np.linspace(-4, 4, 50)), color=Color.red.hex)
+```
+
+![](index_files/figure-commonmark/cell-5-output-1.png)

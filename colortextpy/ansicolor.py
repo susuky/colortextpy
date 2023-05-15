@@ -7,6 +7,7 @@ __all__ = ['Fore', 'Back', 'Style', 'AnsiColor']
 import re
 
 from .color import enum, _EnumMeta, Color, hex2rgb
+from .color import _ClassPropertyDescriptor
 
 
 class _Style(_EnumMeta):
@@ -46,8 +47,8 @@ class _Style(_EnumMeta):
     def widely(self):
         return self._widely
     
+    @_ClassPropertyDescriptor
     @classmethod
-    @property
     def available(cls):
         return tuple(c.name for c in cls if c.widely)
     

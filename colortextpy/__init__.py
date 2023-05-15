@@ -1,4 +1,4 @@
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 from .color import Color
 from .colorizer import Fore, Back, Style, ColorStream, colorize
