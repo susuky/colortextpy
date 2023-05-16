@@ -4,9 +4,9 @@
 
 ## Install
 
-Tested on python 3.6-3.11, win11, win11 WSL2, Ubuntu, Nvidia Jetson Nano
+Tested on python 3.6-3.11, win11, win11 WSL2, Ubuntu
 
-It doesn’t support win10
+It doesn’t support win32
 
 ``` sh
 pip install colortextpy
@@ -27,7 +27,79 @@ colorprint('bold violet', color='#aa00ff', bold=True)
 colorprint('bold violet', color='violet', background=(224, 224, 224), bold=True)
 ```
 
-![](images/2.png)
+![](images/1.png)
+
+Use `Printer.available` to see other color printers
+
+### `Fore`, `Back`, `Style`
+
+``` python
+Fore, Back, Style
+```
+
+    (<AnsiColor: 'FORE'>, <AnsiColor: 'BACK'>, <AnsiColor: 'STYLE'>)
+
+You could use `Style` to get style ansi escape code:
+
+``` python
+Style['bold'], Style.underline
+```
+
+    ('\x1b[01m', '\x1b[04m')
+
+Other style see `Style.availble`, but **bold**, **underline** would be
+the most used
+
+You could use `Fore` and `Back` to get the text foreground and
+background ansi escape code:
+
+``` python
+Fore['red'], Fore.black, Back.chocolate, Back['hotpink']
+```
+
+    ('\x1b[38;2;255;0;0m',
+     '\x1b[38;2;0;0;0m',
+     '\x1b[48;2;210;105;30m',
+     '\x1b[48;2;255;105;180m')
+
+Both `Fore` and `Back` could also support **8-bits**, **hex**, **rgb**
+color.
+
+``` python
+Fore[50], Fore['#ffffff'], Fore['123, 45, 67']
+```
+
+    ('\x1b[38;5;50m', '\x1b[38;2;255;255;255m', '\x1b[38;2;123;45;67m')
+
+``` python
+Back['144'], Back['#123456'], Back['(55, 244, 31)']
+```
+
+    ('\x1b[48;5;144m', '\x1b[48;2;18;52;86m', '\x1b[48;2;55;244;31m')
+
+You could combine `Fore`, `Back`, `Style` to colorize your output:
+
+``` python
+text = 'something123'
+print(Fore[50] + text + Fore.reset)
+print(Back['black'] + Fore.aliceblue + Style.underline + text)
+```
+
+    something123
+    something123
+
+Here’s demo of supported 8-bits colors:
+
+<details>
+<summary>Code</summary>
+
+``` python
+for i in range(256):
+    end = '\n' if (i+1)%8 == 0 else ' '*2
+    print(f'{i:3}: {Back[i]}           {Back.reset}', end=end)
+```
+
+</details>
 
 ### Color
 
@@ -39,14 +111,16 @@ Color.red.name, Color.red.hex, Color.red.rgb, Color['red']
 
     ('red', '#ff0000', (255, 0, 0), <Color.red>)
 
-`Color.available` :
-
-![0.png](images/0.png)
-
-You can also use it with `matplotlib.pyplot`:
+You could also pass the hex constant from
+[`Color`](https://susuky.github.io/colortextpy/color.html#color) into
+`matplotlib.pyplot`:
 
 ``` python
 plt.plot(np.sin(np.linspace(-4, 4, 50)), color=Color.red.hex)
 ```
 
-![](index_files/figure-commonmark/cell-5-output-1.png)
+![](index_files/figure-commonmark/cell-13-output-1.png)
+
+Here are other colors in `Color.available` :
+
+![](images/0.png)

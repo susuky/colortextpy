@@ -161,7 +161,6 @@ class AnsiColorizer:
             
         8. mix of above is ok:
             f'<fg red>{text}--<bg green>{text}--</fg>{text}--</bg>{text}'
-            
     '''
     
     _regex_tag = re.compile(r"<([/\w\s,#]*)>")
