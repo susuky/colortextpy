@@ -206,7 +206,7 @@ class Color(_EnumMeta):
     def __contains__(cls, other):
         return other in cls.available
 
-# %% ../nbs/00_color.ipynb 10
+# %% ../nbs/00_color.ipynb 11
 # def rgb2hex(*rgb) -> str:
 #     return '#{0:x}{1:x}{2:x}'.format(*rgb)
 
