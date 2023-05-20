@@ -55,10 +55,9 @@ class ColorStream(contextlib.ContextDecorator):
             print('FOO')
     ```
     '''
+
     
-    _regex_tag = re.compile('stdout|stderr')
-    
-    def __init__(self, fore=None, back=None, style=None, autoreset=True, streams=('stdout', )):
+    def __init__(self, fore=None, back=None, style=None, autoreset=True, streams='stdout'):
         '''
         Parameters
         ----------
@@ -73,8 +72,8 @@ class ColorStream(contextlib.ContextDecorator):
             
         autoreset: bool
         
-        streams: str, tuple
-            One of {stdout, stderr}, Could be tuple
+        stream: str
+            One of {stdout, stderr}
         '''
         self.ansi = AnsiColor(fore, back, style)
         
@@ -82,10 +81,17 @@ class ColorStream(contextlib.ContextDecorator):
         self.autoreset = autoreset
         self._ori_reset = autoreset
         
-        self.streams = streams if isinstance(streams, (list, tuple)) else (streams, )
+        if streams not in ('stdout', 'stderr'): 
+            raise ValueError(f'{streams} is not acceptable')
+        self.streams = stream if isinstance(streams, (list, tuple)) else (streams, )
         
-        self.files = [getattr(sys, stream) for stream in streams]
-        self.ori_files = []
+        
+        
+        
+        self.file = getattr(sys, streams)
+        #self.ori_files = []
+        self.ori_file = None
+        self.stream = self.streams
 
             
     def affect_global_stream(self):
@@ -102,65 +108,74 @@ class ColorStream(contextlib.ContextDecorator):
         self.autoreset = self._ori_reset
         
     def __enter__(self):
-        if not self.ori_files:
-            for stream in self.streams:
-                self.ori_files.append(getattr(system_stream, stream))
-                setattr(sys, stream, self)
+        if self.ori_file is None:
+            self.ori_file = getattr(system_stream, self.stream)
+            setattr(sys, self.stream, self)
+#         if not self.ori_files:
+#             for stream in self.streams:
+#                 self.ori_files.append(getattr(system_stream, stream))
+#                 setattr(sys, stream, self)
 
     def __exit__(self, *args):
-        if self.ori_files:
-            for stream, ori_file in zip(self.streams, self.ori_files):
-                setattr(sys, stream, ori_file)
-            self.ori_files = []
+        if self.ori_file:
+            setattr(sys, self.stream, self.ori_file)
+            self.ori_file = None
+#         if self.ori_files:
+#             for stream, ori_file in zip(self.streams, self.ori_files):
+#                 setattr(sys, stream, ori_file)
+#             self.ori_files = []
 
     def write(self, text):
-        for file in self.ori_files:
-            reset = Style.reset_all if self.autoreset else ''
-            file.write(f'{self.ansi.ansi_fmt}{text}{reset}')
-            file.flush()
-            
+        reset = Style.reset_all if self.autoreset else ''
+        self.file.write(f'{self.ansi.ansi_fmt}{text}{reset}')
+        self.flush()
+
     def flush(self):
-        for file in self.ori_files:
-            file.flush()           
+        self.file.flush()
       
     
 class AnsiColorizer:
-    r'''
-    For `text` parameter, you can add color tag. Start with <tag> end with </tag>.
+    '''
+    
+    For `text` parameter,  you can add color tag. Start with \<tag\> end with \</tag\>.
     
     Some usage:
+    
+    ```python
         text = 'something'
-        
-        1. blue text tag: 
+
+        # 1. blue text tag: 
+
             f'<blue>{text}</fg>'
             f'<blue>{text}</blue>'
-            
-        2. specify fg:
+
+        # 2. specify fg:
             f'<fg red>{text}</fg>
-            
-        3. specify bg:
+
+        # 3. specify bg:
             f'<bg purple>{text}</bg>
-            
-        4. style:
+
+        # 4. style:
             f'<bold>{text}</bold>'
-            
-        5. support rgb format:
+
+        # 5. support rgb format:
             f'<255, 255, 255>{text}</fg>'
             f'<fg 255, 255, 255>{text}</fg>'
             f'<bg 255, 255, 255>{text}</bg>'
-            
-        6. support hex format:
+
+        # 6. support hex format:
             f'<#FFFFFF>{text}</fg>'
             f'<fg #FFFFFF>{text}</fg>'
             f'<bg #FFFFFF>{text}</bg>'
-        
-        7. support 8-bits color:
+
+        # 7. support 8-bits color:
             f'<50>{text}</fg>'
             f'<fg 50>{text}</fg>'
             f'<bg 50>{text}</bg>'
-            
-        8. mix of above is ok:
+
+        # 8. mix of above is ok:
             f'<fg red>{text}--<bg green>{text}--</fg>{text}--</bg>{text}'
+    ```
     '''
     
     _regex_tag = re.compile(r"<([/\w\s,#]*)>")
