@@ -42,7 +42,7 @@ colorprint('violet', color=Fore.green, background='violet', bold=True)
 
 Use `Printer.available` to see other color printers
 
-### `[Fore](https://susuky.github.io/colortextpy/ansicolor.html#fore)`, [`Back`](https://susuky.github.io/colortextpy/ansicolor.html#back), [`Style`](https://susuky.github.io/colortextpy/ansicolor.html#style)
+### [`Fore`](https://susuky.github.io/colortextpy/ansicolor.html#fore), [`Back`](https://susuky.github.io/colortextpy/ansicolor.html#back), [`Style`](https://susuky.github.io/colortextpy/ansicolor.html#style)
 
 ``` python
 from colortextpy import Fore, Back, Style, AnsiColor, RESET_ALL
@@ -123,10 +123,6 @@ print(Back['black'] + Fore.aliceblue + Style.underline + text)
 api to combine `Fore`, `Back` and `Style` together.
 
 ------------------------------------------------------------------------
-
-<a
-href="https://github.com/susuky/colortextpy/blob/main/colortextpy/ansicolor.py#LNone"
-target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### [AnsiColor](https://susuky.github.io/colortextpy/ansicolor.html#ansicolor-1)
 
