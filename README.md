@@ -166,15 +166,8 @@ Enables context managers to work as decorators to colorize the
 Some usage:
 
 ``` python
-    with ColorStream(fore='red'):
-        print('text')        
+from colortextpy import ColorStream
 
-    @ColorStream(fore=Fore.dark_orange)
-    def foo():
-        print('FOO')
-```
-
-``` python
 with ColorStream(fore=Fore.dark_violet, autoreset=False):
     print('autoreset off, affect next text')
     with ColorStream(back=Back.light_green, style=(Style.underline, Style.bold)):
@@ -204,6 +197,7 @@ you can add color tag. Start with \<tag\> end with \</tag\>.
 Some usage:
 
 ``` python
+from colortextpy import colorize
 text = 'something'
 text_w_tag = f'{text}-<fg red><bg #f0ffff>{text}</fg></bg>-{text}'
 print(colorize(text_w_tag))
@@ -252,6 +246,8 @@ print(colorize('something2', fore='r', back='y', style='underline'))
 Some Constant of color with **hex**, **rgb**, **bgr** format
 
 ``` python
+from colortextpy import Color
+
 Color.red.name, Color.red.hex, Color.red.rgb, Color['red']
 ```
 
