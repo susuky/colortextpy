@@ -72,7 +72,7 @@ class ColorStream(contextlib.ContextDecorator):
             
         autoreset: bool
         
-        stream: str
+        streams: str
             One of {stdout, stderr}
         '''
         self.ansi = AnsiColor(fore, back, style)
@@ -83,15 +83,10 @@ class ColorStream(contextlib.ContextDecorator):
         
         if streams not in ('stdout', 'stderr'): 
             raise ValueError(f'{streams} is not acceptable')
-        self.streams = stream if isinstance(streams, (list, tuple)) else (streams, )
-        
-        
-        
-        
-        self.file = getattr(sys, streams)
-        #self.ori_files = []
+
+        self.stream = streams
         self.ori_file = None
-        self.stream = self.streams
+        self.file = getattr(sys, streams)
 
             
     def affect_global_stream(self):
@@ -111,19 +106,12 @@ class ColorStream(contextlib.ContextDecorator):
         if self.ori_file is None:
             self.ori_file = getattr(system_stream, self.stream)
             setattr(sys, self.stream, self)
-#         if not self.ori_files:
-#             for stream in self.streams:
-#                 self.ori_files.append(getattr(system_stream, stream))
-#                 setattr(sys, stream, self)
+
 
     def __exit__(self, *args):
         if self.ori_file:
             setattr(sys, self.stream, self.ori_file)
             self.ori_file = None
-#         if self.ori_files:
-#             for stream, ori_file in zip(self.streams, self.ori_files):
-#                 setattr(sys, stream, ori_file)
-#             self.ori_files = []
 
     def write(self, text):
         reset = Style.reset_all if self.autoreset else ''
@@ -150,10 +138,10 @@ class AnsiColorizer:
             f'<blue>{text}</blue>'
 
         # 2. specify fg:
-            f'<fg red>{text}</fg>
+            f'<fg red>{text}</fg>'
 
         # 3. specify bg:
-            f'<bg purple>{text}</bg>
+            f'<bg purple>{text}</bg>'
 
         # 4. style:
             f'<bold>{text}</bold>'
