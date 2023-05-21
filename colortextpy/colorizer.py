@@ -57,7 +57,15 @@ class ColorStream(contextlib.ContextDecorator):
     '''
 
     
-    def __init__(self, fore=None, back=None, style=None, autoreset=True, streams='stdout'):
+    def __init__(
+        self, 
+        fore=None, 
+        back=None, 
+        style=None, 
+        autoreset=True, 
+        filename=None, 
+        streams='stdout'
+    ):
         '''
         Parameters
         ----------
@@ -71,6 +79,9 @@ class ColorStream(contextlib.ContextDecorator):
             Text style. Seee `Style.available`.
             
         autoreset: bool
+        
+        filename: str
+            if filename is not None, it would output texts to text file.
         
         streams: str
             One of {stdout, stderr}
@@ -87,7 +98,7 @@ class ColorStream(contextlib.ContextDecorator):
         self.stream = streams
         self.ori_file = None
         self.file = getattr(sys, streams)
-
+        self.filename = filename
             
     def affect_global_stream(self):
         if not self._global_flag:
@@ -106,20 +117,28 @@ class ColorStream(contextlib.ContextDecorator):
         if self.ori_file is None:
             self.ori_file = getattr(system_stream, self.stream)
             setattr(sys, self.stream, self)
+            if self.filename:
+                self.text_file = open(self.filename, 'a')
 
 
     def __exit__(self, *args):
         if self.ori_file:
             setattr(sys, self.stream, self.ori_file)
             self.ori_file = None
+            self.text_file.close()
 
     def write(self, text):
         reset = Style.reset_all if self.autoreset else ''
-        self.file.write(f'{self.ansi.ansi_fmt}{text}{reset}')
+        text = f'{self.ansi.ansi_fmt}{text}{reset}'
+        self.file.write(text)
+        if self.filename:
+            self.text_file.write(text)
         self.flush()
 
     def flush(self):
         self.file.flush()
+        if self.filename:
+            self.text_file.flush()
       
     
 class AnsiColorizer:

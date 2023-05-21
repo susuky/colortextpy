@@ -1,0 +1,3 @@
+[38;2;138;43;226mtest_Colorstream: [00m[38;2;138;43;226m
+[00m[38;2;138;43;226mIt would print blueviolet texts, and write the text to test_Colorstream.txt[00m[38;2;138;43;226m
+[00m
