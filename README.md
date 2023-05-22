@@ -266,3 +266,15 @@ plt.plot(np.sin(np.linspace(-4, 4, 50)), color=Color.red.hex)
 Here are other colors in `Color.available` :
 
 ![](images/index-10.png)
+
+## Friendly Reminder
+
+If you use custom terminal, you might need to change terminal setting to support rgb color. 
+
+Take SecureCRT as an example:
+
+    Options -> Edit Default Session -> Terminal -> Emulation
+    Change ColorMode to True Color
+    Tick the checkbox 'Use color scheme'
+    
+ ![](images/index-11.png)
